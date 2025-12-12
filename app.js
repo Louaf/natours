@@ -15,7 +15,7 @@ const app = express();
 // 1)Global Middlewares
 // Security HTTP headers
 app.use(helmet());
-
+//app.use(helmet());
 // development logging
 if (process.env.NODE_ENV === 'devolopment') {
   app.use(morgan('dev'));
