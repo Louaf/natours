@@ -1,6 +1,7 @@
 const express = require('express');
 const authController = require('./../controllers/authController');
 const tourController = require('../controllers/tourController');
+const reviewRouter = require('./reviewRoutes');
 ///////////////////
 const router = express.Router();
 
@@ -9,6 +10,9 @@ router.use((req, res, next) => {
   console.log('tourRouter');
   next();
 });
+// reroute nested route to its router
+router.use('/:tourId/reviews', reviewRouter);
+
 router
   .route('/top-5-cheepest')
   .get(tourController.aliasTopTours, tourController.getAllTours);
