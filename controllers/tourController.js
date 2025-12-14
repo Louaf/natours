@@ -2,6 +2,7 @@ const Tour = require('../models/tourModel');
 const APIfeatures = require('../utils/apifeatures');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory');
 /*const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`),
 );*/
@@ -72,6 +73,9 @@ exports.updateTour = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.deleteTour = factory.deleteOne(Tour);
+/*
 exports.deleteTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findByIdAndDelete(req.params.id);
   if (!tour) {
@@ -82,6 +86,7 @@ exports.deleteTour = catchAsync(async (req, res, next) => {
     data: null, // 204 responses typically have no body
   });
 });
+*/
 
 exports.getTourStats = catchAsync(async (req, res, next) => {
   const stats = await Tour.aggregate([
