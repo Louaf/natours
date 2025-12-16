@@ -268,6 +268,3 @@ This is a personal learning project, but suggestions and feedback are always wel
 
 This project is open source and available under the [ISC License](LICENSE).
 
----
-
-**Built with ❤️ while learning Node.js** | *Last Updated: December 2024*
