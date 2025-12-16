@@ -8,20 +8,25 @@ router.use((req, res, next) => {
   console.log('Review router here !!');
   next();
 });
-
+router.use(authController.protect);
 router
   .route('/')
   .post(
-    authController.protect,
     authController.restrictTo('user'),
     reviewController.setTourAndUserID,
     reviewController.createReview
   )
   .get(reviewController.getAllReviews);
-
+// thought :user can delete and update any review ???? they only can delete their own ones only
 router
   .route('/:id')
   .get(reviewController.getReview)
-  .delete(reviewController.deleteReview)
-  .patch(reviewController.updateReview);
+  .delete(
+    authController.restrictTo('user', 'admin'),
+    reviewController.deleteReview
+  )
+  .patch(
+    authController.restrictTo('user', 'admin'),
+    reviewController.updateReview
+  );
 module.exports = router;

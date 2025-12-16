@@ -18,19 +18,21 @@ router
   .get(tourController.aliasTopTours, tourController.getAllTours);
 
 router.route('/tour-stats').get(tourController.getTourStats);
-router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
+router.route('/:id').get(tourController.getTour);
+router.route('/').get(tourController.getAllTours);
+
+router.use(authController.protect);
+router.use(authController.restrictTo('admin', 'lead-guide'));
 router
-  .route('/')
-  .get(authController.protect, tourController.getAllTours)
-  .post(tourController.createTour);
+  .route('/monthly-plan/:year')
+  .get(
+    authController.restrictTo('admin', 'lead-guide', 'guide'),
+    tourController.getMonthlyPlan
+  );
+router.route('/').post(tourController.createTour);
 router
   .route('/:id')
-  .get(tourController.getTour)
   .patch(tourController.updateTour)
-  .delete(
-    authController.protect,
-    authController.restrictTo('admin', 'lead-guide'),
-    tourController.deleteTour
-  );
+  .delete(tourController.deleteTour);
 
 module.exports = router;
