@@ -264,7 +264,3 @@ This is a personal learning project, but suggestions and feedback are always wel
 - **MongoDB University** - Excellent free courses on MongoDB
 - **Express.js & Node.js** communities for amazing documentation
 
-## 📝 License
-
-This project is open source and available under the [ISC License](LICENSE).
-
