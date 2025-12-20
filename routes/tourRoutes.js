@@ -21,6 +21,14 @@ router.route('/tour-stats').get(tourController.getTourStats);
 router.route('/:id').get(tourController.getTour);
 router.route('/').get(tourController.getAllTours);
 
+// GEO JSON STUFF
+// two ways of endpoints url /tours-within?distance=23&center = lat,lng &unit=mi
+// or /tours-within/233/center/45,45/unit/mi
+router
+  .route('/tours-within/:distance/center/:latlng/unit/:unit')
+  .get(tourController.getToursWithin);
+router.route('/distances/:latlng/unit/:unit').get(tourController.getDistances);
+
 router.use(authController.protect);
 router.use(authController.restrictTo('admin', 'lead-guide'));
 router
@@ -29,6 +37,7 @@ router
     authController.restrictTo('admin', 'lead-guide', 'guide'),
     tourController.getMonthlyPlan
   );
+
 router.route('/').post(tourController.createTour);
 router
   .route('/:id')
