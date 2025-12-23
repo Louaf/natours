@@ -8,6 +8,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const viewRouter = require('./routes/viewRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const hpp = require('hpp');
 const { whitelist } = require('validator');
@@ -71,12 +72,7 @@ app.use((req, res, next) => {
 
 // 3) Routes
 
-app.get('/', (req, res) => {
-  res.status(200).render('base', {
-    tour: 'the forest camper',
-    user: 'ytousif ',
-  });
-});
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
