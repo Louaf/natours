@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema({
     trim: true,
     validate: [valditor_1.isEmail, 'this is supposed to be a real email'],
   },
-  imageCover: {
+  photo: {
     type: String,
   },
   role: {
