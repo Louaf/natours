@@ -19,32 +19,55 @@ const handleValidationErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
-const sendErrorDev = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack,
+const sendErrorDev = (err, req, res) => {
+  // A)API
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      message: err.message,
+      stack: err.stack,
+    });
+  }
+  // B)RENDERED WEBSITE
+  console.log('ERROR 💥', err);
+  return res.status(err.statusCode).render('error', {
+    title: 'something went wrong',
+    msg: err.message,
   });
 };
-const sendErrorProd = (err, res) => {
-  // Operational (handled) , Trusted error : send message to client
-  if (err.isOperational) {
-    res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-    });
+const sendErrorProd = (err, req, res) => {
+  // A) API
+  if (req.originalUrl.startsWith('/api')) {
+    // Operational (handled) , Trusted error : send message to client
+    if (err.isOperational) {
+      return res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message,
+      });
+    }
     //programming or unknown error : don't leak error information
-  } else {
     //1) log error
     console.log('ERROR 💥', err);
-
     //2)send generic message
-    res.status(500).json({
+    return res.status(500).json({
       status: 'fail',
       message: 'Something went wrong ',
     });
   }
+  // B)Rendered website
+  if (err.isOperational) {
+    //console.log('hiiii');
+    return res.status(err.statusCode).render('error', {
+      title: 'something went wrong',
+      msg: err.message,
+    });
+  }
+  console.log('ERROR 💥', err);
+  return res.status(err.statusCode).render('error', {
+    title: 'something went wrong',
+    msg: 'please try again later ',
+  });
 };
 
 module.exports = (err, req, res, next) => {
@@ -52,7 +75,7 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || 'error';
 
   if (process.env.NODE_ENV === 'devolopment') {
-    sendErrorDev(err, res);
+    sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = {
       ...err,
@@ -69,6 +92,6 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateDB(error);
     if (error.name == 'ValidationError') error = handleValidationErrorDB(error);
-    sendErrorProd(error, res);
+    sendErrorProd(error, req, res);
   }
 };
