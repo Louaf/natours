@@ -1,16 +1,19 @@
 import '@babel/polyfill';
 import { login, logout } from './login';
-
+import { updatedSettings } from './updateSetting';
 //ELEMENT
-const loginForm = document.querySelector('.form');
+const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
+const userDataForm = document.querySelector('.form-user-data');
+const userPasswordForm = document.querySelector('.form-user-password');
+
 //VALUES
 
 if (loginForm) {
   loginForm.addEventListener('submit', (e) => {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    console.log('gigidojfosdljfo');
+    //console.log('gigidojfosdljfo');
     e.preventDefault();
     login(email, password);
   });
@@ -18,4 +21,29 @@ if (loginForm) {
 
 if (logOutBtn) {
   logOutBtn.addEventListener('click', logout);
+}
+if (userDataForm) {
+  userDataForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const name = document.getElementById('name').value;
+    updatedSettings({ name, email }, 'data');
+  });
+}
+if (userPasswordForm) {
+  userPasswordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    document.querySelector('.btn--save-password').textContent = 'updating...';
+    const oldPassword = document.getElementById('password-current').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('password-confirm').value;
+    await updatedSettings(
+      { oldPassword, password, passwordConfirm },
+      'password'
+    );
+    document.querySelector('.btn--save-password').textContent = 'SAVE PASSWORD';
+    document.getElementById('password-current').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('password-confirm').value = '';
+  });
 }
