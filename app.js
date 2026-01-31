@@ -62,7 +62,7 @@ app.use(
       'price',
       'maxGroupSize',
     ],
-  })
+  }),
 );
 
 // Test middleware

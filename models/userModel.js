@@ -18,6 +18,7 @@ const userSchema = mongoose.Schema({
     validate: [valditor_1.isEmail, 'this is supposed to be a real email'],
   },
   photo: {
+    default: 'default.jpg',
     type: String,
   },
   role: {
@@ -88,7 +89,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimeStamp) {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(
       this.passwordChangedAt.getTime() / 1000,
-      10
+      10,
     );
     return changedTimestamp > JWTTimeStamp;
   }
@@ -106,7 +107,7 @@ userSchema.methods.createPasswordResetToken = function () {
   console.log(
     'in the method we got : ',
     { resetToken },
-    this.PasswordResetToken
+    this.PasswordResetToken,
   );
   return resetToken;
 };

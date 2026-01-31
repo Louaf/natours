@@ -25,9 +25,12 @@ if (logOutBtn) {
 if (userDataForm) {
   userDataForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const email = document.getElementById('email').value;
-    const name = document.getElementById('name').value;
-    updatedSettings({ name, email }, 'data');
+    const form = new FormData();
+    form.append('name', document.getElementById('name').value);
+    form.append('email', document.getElementById('email').value);
+    form.append('photo', document.getElementById('photo').files[0]);
+    console.log(form);
+    updatedSettings(form, 'data');
   });
 }
 if (userPasswordForm) {
@@ -39,7 +42,7 @@ if (userPasswordForm) {
     const passwordConfirm = document.getElementById('password-confirm').value;
     await updatedSettings(
       { oldPassword, password, passwordConfirm },
-      'password'
+      'password',
     );
     document.querySelector('.btn--save-password').textContent = 'SAVE PASSWORD';
     document.getElementById('password-current').value = '';
